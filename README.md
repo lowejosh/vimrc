@@ -1,4 +1,3 @@
-# .vimrc
 ## plugins
 * YouCompleteMe
 * delimitMate
