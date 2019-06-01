@@ -1,5 +1,5 @@
-Install Vundle first, then run +PluginInstall
-For the color scheme, create directory ~/.vim/colors and move ~/.vim/bundle/vim-colors-solarized/colors/solarized.vim to ~/.vim/colors
+Install Vundle first, then run +PluginInstall.
+For the color scheme, create directory ~/.vim/colors and move ~/.vim/bundle/vim-colors-solarized/colors/solarized.vim to ~/.vim/colors.
 
 ## plugins
 * delimitMate
