@@ -1,11 +1,19 @@
+Install Vundle first, then run +PluginInstall
+For the color scheme, create directory ~/.vim/colors and move ~/.vim/bundle/vim-colors-solarized/colors/solarized.vim to ~/.vim/colors
+
 ## plugins
-* YouCompleteMe
 * delimitMate
+* vim-indent-guides
+* lightline
 * ctrp-p
-* vim-airline
-* syntastic
-* Ultisnips
-* vundle
+* vim-eunuch
+* vim-surround
+* nerdtree (binded to ctrl-O)
+* vim-gitgutter
+* emmet-vim
+* vim-javascript
+* vim-jsx
+* ale
 
 ## tab settings
 * plugin indent on
