@@ -50,35 +50,39 @@ let &t_Co=256
 " Plugins
 call plug#begin('~/.vim/plugged')
 Plug 'preservim/nerdtree' "File tree
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' } "Fuzzy searching
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } } "Fuzzy searching
 Plug 'junegunn/fzf.vim' "Fuzzy searching 
 Plug 'jiangmiao/auto-pairs' "Automatic pairs {}, (), etc
 Plug 'tpope/vim-commentary' "Commenting with gc and gcc
 Plug 'othree/yajs.vim' "Javascript syntax
 Plug 'mxw/vim-jsx' "JSX syntax
-Plug 'drewtempelmeyer/palenight.vim' "Colour scheme
+" Plug 'drewtempelmeyer/palenight.vim' "Colour scheme
+Plug 'morhetz/gruvbox' "Colour scheme
 Plug 'itchyny/lightline.vim' "Better footer
-Plug 'dense-analysis/ale' "Linting
-Plug '/Shougo/deoplete.nvim' "Autocomplete 
-Plug 'autozimu/LanguageClient-neovim', { 
-    \ 'branch': 'next',
-    \ 'do': 'bash install.sh',
-    \ } "Language server
-
-
+" Plug 'dense-analysis/ale' "Linting
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 " Initialize plugin system
 call plug#end()
 
-" Additional options
+"" Additional options
 map <C-o> :NERDTreeToggle<CR>
-"move to the next ALE warning / error
-nnoremap ]r :ALENextWrap<CR>     
-"move to the previous ALE warning / error
-nnoremap [r :ALEPreviousWrap<CR> 
-colorscheme palenight
-let g:lightline = { 'colorscheme': 'palenight' }
-let g:palenight_terminal_italics=1
+""move to the next ALE warning / error
+"nnoremap ]r :ALENextWrap<CR>     
+""move to the previous ALE warning / error
+"nnoremap [r :ALEPreviousWrap<CR> 
+"
+colorscheme gruvbox
+let g:lightline = { 'colorscheme': 'gruvbox' }
+map <Space> <Leader>
+nmap <leader>gd <Plug>(coc-definitions)
+nmap <leader>gr <Plug>(coc-references)
+nnoremap <C-p> :GFiles<CR>
+" Clear highlighting on escape in normal mode
+nnoremap <esc> :noh<return><esc>
+nnoremap <esc>^[ <esc>^[
+command! -nargs=0 Prettier :CocCommand prettier.formatFile "Prettier
+nmap <leader>f  <Plug>(coc-format-selected)
 
 " Formatters
 "npm install -g prettier
@@ -89,33 +93,22 @@ au FileType html setlocal formatprg=js-beautify\ --type\ html
 au FileType scss setlocal formatprg=prettier\ --parser\ css
 au FileType css setlocal formatprg=prettier\ --parser\ css
 
-" Linters
-let g:ale_linters = {
-\   'python': ['flake8', 'pylint'],
-\   'javascript': ['eslint'],
-\   'vue': ['eslint']
-\}
-let g:ale_fixers = {
-  \    'javascript': ['eslint'],
-  \    'typescript': ['prettier', 'tslint'],
-  \    'vue': ['eslint'],
-  \    'scss': ['prettier'],
-  \    'html': ['prettier'],
-  \    'reason': ['refmt']
-\}
-let g:ale_fix_on_save = 1
+" " Linters
+" let g:ale_linters = {
+" \   'python': ['flake8', 'pylint'],
+" \   'javascript': ['eslint'],
+" \   'vue': ['eslint']
+" \}
+" let g:ale_fixers = {
+"   \    'javascript': ['eslint'],
+"   \    'typescript': ['prettier', 'tslint'],
+"   \    'vue': ['eslint'],
+"   \    'scss': ['prettier'],
+"   \    'html': ['prettier'],
+"   \    'reason': ['refmt']
+" \}
+" let g:ale_fix_on_save = 1
 
-" Language server
-"npm install -g javascript-typescript-langserver
-let g:LanguageClient_serverCommands = {
-    \ 'javascript': ['javascript-typescript-stdio'],
-    \ 'ruby': ['~/.rbenv/shims/solargraph', 'stdio'],
-\}
-nnoremap <leader>l :call LanguageClient_contextMenu()<CR>
-nnoremap K :call LanguageClient#textDocument_hover()<CR>
-nnoremap gd :call LanguageClient#textDocument_definition()<CR>
-nnoremap <leader>r :call LanguageClient#textDocument_rename()<CR>
-"https://www.vimfromscratch.com/articles/vim-for-javascript-and-react-in-2019/
 
 " True Colors
 if (has("nvim"))
@@ -129,3 +122,21 @@ endif
 if (has("termguicolors"))
   set termguicolors
 endif
+
+" use <tab> for trigger completion and navigate to the next complete item
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~ '\s'
+endfunction
+
+inoremap <silent><expr> <Tab>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<Tab>" :
+      \ coc#refresh()
+
+" Testing syntax stuff
+augroup SyntaxSettings
+    autocmd!
+    autocmd BufNewFile,BufRead *.tsx set filetype=typescript
+augroup END
+
